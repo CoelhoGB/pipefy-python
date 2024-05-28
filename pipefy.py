@@ -407,6 +407,20 @@ class Pipefy(object):
         return self.request(query, headers).get('data', {}).get('allCards', [])
 
 
+    def findCards(self, pipe_id, search="", response_fields=None, headers={}):
+        """ List cards: Get cards by pipe identifier. """
+
+        response_fields = response_fields or 'edges { node { id title assignees { id }' \
+                ' comments { text } comments_count current_phase { name } done due_date ' \
+                'fields { name value } labels { name } phases_history { phase { name } firstTimeIn lastTimeOut } url } }'
+        query = '{ findCards(pipeId: %(pipe_id)s, search: %(search)s) { %(response_fields)s } }' % {
+            'pipe_id': json.dumps(pipe_id),
+            'search': search,
+            'response_fields': response_fields,
+        }
+        return self.request(query, headers).get('data', {}).get('findCards', [])
+
+
     def card(self, id, response_fields=None, headers={}):
         """ Show card: Get a card by its identifier. """
 
